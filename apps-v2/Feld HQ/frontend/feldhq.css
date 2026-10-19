@@ -1,0 +1,972 @@
+/* Feld HQ — design system carried over from the Domo "Event Ops" app
+   (domo-workspace/apps/event-ops/src/app.css), which itself ports the MJ Event
+   Ops prototype. Feld HQ is the shell those modules move into, so the two must
+   read as one product.
+
+   Deliberate carry-overs worth not "tidying" later:
+   - Headings use Arial Narrow with font-stretch:75%. That condensed look is the
+     brand's, and losing it is the single fastest way to stop matching.
+   - Status is carried by a SOFT background, never by coloured text. --green,
+     --amber and --blue all resolve to #111 on purpose.
+   - The accent is used sparingly: active nav rail, active tab underline, focus
+     rings. Never for large fills. */
+
+:root {
+  --canvas: #f4f4f2;
+  --surface: #fff;
+  --surface-solid: #fff;
+  --surface-muted: #f3f3ef;
+  --ink: #111;
+  --secondary: #5d5d59;
+  --tertiary: #7a7a74;
+  --line: #11111129;
+  --line-strong: #1111114d;
+  --accent: #fc0;
+  --accent-hover: #e5b800;
+  --accent-soft: #ffcc0024;
+  --green: #111;
+  --green-soft: #f0f0ec;
+  --amber: #111;
+  --amber-soft: #fff6cf;
+  --blue: #111;
+  --radius: 8px;
+  --shadow: 0 1px 2px #00000006;
+  --sidebar-width: 224px;
+  --gutter: clamp(24px, 3.6vw, 52px);
+  --head: "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+html { background: var(--canvas); }
+
+body {
+  background: var(--canvas);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  min-width: 320px;
+  margin: 0;
+  font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+}
+
+h1, h2, h3, h4 { font-family: var(--head); font-stretch: 75%; }
+button, input, select, textarea { color: inherit; font: inherit; }
+button { -webkit-tap-highlight-color: transparent; }
+
+button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 3px solid #ffd20099;
+  outline-offset: 2px;
+}
+
+/* ---------- shell ---------- */
+
+.app-shell { min-height: 100vh; }
+
+.sidebar {
+  background: #000;
+  border-right: 1px solid #000;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  left: 0;
+  overflow-y: auto;
+  padding: 16px 14px 18px;
+  position: fixed;
+  top: 0;
+  width: var(--sidebar-width);
+  z-index: 30;
+}
+
+.brand { align-items: center; display: flex; gap: 12px; margin: 0 8px 26px; }
+
+/* Inlined rather than shipped as a file: a broken brand mark is a loud
+   failure, and this is the same asset Event Ops carries. 3.3KB. */
+.brand-logo {
+  background-image: url("data:image/png;base64,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");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  flex: none;
+  height: 44px;
+  width: 48px;
+}
+
+.brand-copy, .brand-copy strong, .brand-copy small { display: block; }
+
+.brand-copy strong {
+  color: #fff;
+  font-family: var(--head);
+  font-size: 14px;
+  font-stretch: 75%;
+  font-weight: 800;
+  letter-spacing: 0.015em;
+  text-transform: uppercase;
+}
+
+.brand-copy small { color: #ffffff9e; font-size: 11px; margin-top: 2px; }
+
+/* ---------- apps menu (left rail) ---------- */
+
+.apps-menu { display: grid; gap: 2px; }
+
+.apps-menu-label {
+  color: #ffffff5c;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  margin: 0 10px 8px;
+  text-transform: uppercase;
+}
+
+.nav-group > button {
+  align-items: center;
+  background: 0 0;
+  border: 0;
+  border-radius: 3px;
+  color: #ffffffc2;
+  cursor: pointer;
+  display: grid;
+  font-family: var(--head);
+  font-size: 14px;
+  font-stretch: 75%;
+  font-weight: 800;
+  gap: 10px;
+  grid-template-columns: 1fr auto;
+  min-height: 40px;
+  padding: 7px 10px;
+  text-align: left;
+  text-transform: uppercase;
+  transition: background 0.14s, color 0.14s;
+  width: 100%;
+}
+
+.nav-group > button:hover { background: #202020; }
+.nav-group > button .caret { font-size: 9px; opacity: 0.7; transition: transform 0.16s; }
+.nav-group > button[aria-expanded="true"] .caret { transform: rotate(180deg); }
+
+.nav-children { display: grid; gap: 2px; margin: 2px 0 6px; }
+
+.nav-item {
+  align-items: center;
+  background: 0 0;
+  border: 0;
+  border-radius: 3px;
+  color: #ffffffc2;
+  cursor: pointer;
+  display: grid;
+  font-size: 12px;
+  font-weight: 600;
+  gap: 8px;
+  grid-template-columns: 1fr auto;
+  min-height: 34px;
+  padding: 6px 10px 6px 20px;
+  text-align: left;
+  transition: background 0.14s, color 0.14s, transform 0.14s;
+  width: 100%;
+}
+
+.nav-item:hover:not([aria-disabled="true"]) { background: #202020; }
+.nav-item:active:not([aria-disabled="true"]) { transform: scale(0.985); }
+
+.nav-item.active {
+  background: #222;
+  box-shadow: inset 3px 0 0 var(--accent);
+  color: #fff;
+}
+
+.nav-item[aria-disabled="true"] { color: #ffffff57; cursor: default; }
+
+.nav-item small {
+  background: #ffffff1f;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 620;
+  padding: 3px 6px;
+  white-space: nowrap;
+}
+
+.nav-item.nested { padding-left: 32px; }
+
+.sidebar-context {
+  border-top: 1px solid #ffffff29;
+  display: grid;
+  gap: 3px;
+  margin-top: auto;
+  padding: 16px 10px 0;
+}
+
+.sidebar-context > span {
+  color: #ffffff7a;
+  font-size: 11px;
+  font-weight: 610;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.sidebar-context strong { color: #fff; font-size: 12px; font-weight: 650; margin-top: 2px; }
+.sidebar-context small { color: #fff9; font-size: 11px; }
+
+/* ---------- workspace + header ---------- */
+
+.workspace { margin-left: var(--sidebar-width); min-height: 100vh; }
+
+.app-header {
+  align-items: center;
+  background: #fff;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  gap: 18px;
+  height: 48px;
+  justify-content: space-between;
+  padding: 0 var(--gutter);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.app-header h1 {
+  font-family: var(--head);
+  font-size: 19px;
+  font-stretch: 75%;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  margin: 0;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.header-tools { align-items: center; display: flex; gap: 12px; }
+
+.header-search {
+  background: var(--surface-muted);
+  border: 1px solid #0000;
+  border-radius: 999px;
+  font-size: 12px;
+  height: 30px;
+  padding: 0 12px;
+  transition: background 0.14s, border-color 0.14s;
+  width: 200px;
+}
+
+.header-search:focus { background: #fff; border-color: #1111116b; outline: none; }
+
+.env-badge {
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  display: inline-flex;
+  font-size: 11px;
+  font-weight: 650;
+  padding: 5px 8px;
+  white-space: nowrap;
+}
+
+.env-badge i { background: var(--accent); border-radius: 50%; height: 7px; margin-right: 6px; width: 7px; }
+.env-badge.preview i { background: var(--tertiary); }
+
+.avatar {
+  align-items: center;
+  background: var(--accent);
+  border-radius: 50%;
+  color: #111;
+  display: flex;
+  font-family: var(--head);
+  font-size: 12px;
+  font-stretch: 75%;
+  font-weight: 800;
+  height: 28px;
+  justify-content: center;
+  width: 28px;
+}
+
+/* ---------- EIS context bar ---------- */
+
+.event-hero {
+  background: #fff;
+  border-bottom: 1px solid var(--line);
+  display: grid;
+  gap: 20px 34px;
+  grid-template-columns: minmax(240px, 0.72fr) minmax(560px, 1.28fr);
+  padding: 20px var(--gutter) 16px;
+}
+
+.event-identity { align-self: center; min-width: 0; }
+
+.event-identity h2 {
+  font-family: var(--head);
+  font-size: clamp(26px, 2.6vw, 38px);
+  font-stretch: 75%;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1;
+  margin: 0;
+}
+
+.event-identity p { color: var(--secondary); font-size: 13px; line-height: 1.45; margin: 9px 0 0; }
+
+/* Five EIS filters: status, year, show group, show, engagement. The order is
+   deliberate and carried over from Event Ops — broadest scope first, then year,
+   then progressively narrower. Do not reorder. Engagement labels are the longest
+   ("Salt Lake City, UT · Jan 2, 2026"), so it gets the extra room. */
+.event-controls {
+  align-items: end;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) minmax(0, 1.5fr);
+}
+
+.event-controls label { display: grid; gap: 6px; min-width: 0; }
+
+.event-controls label > span {
+  align-items: baseline;
+  color: #4d4d52;
+  display: flex;
+  font-size: 11px;
+  font-weight: 620;
+  gap: 7px;
+  white-space: nowrap;
+}
+
+.event-controls select {
+  appearance: none;
+  background-color: var(--surface-muted);
+  background-image: linear-gradient(45deg, #0000 50%, #696970 50%), linear-gradient(135deg, #696970 50%, #0000 50%);
+  background-position: calc(100% - 17px) calc(50% - 2px), calc(100% - 12px) calc(50% - 2px);
+  background-repeat: no-repeat;
+  background-size: 5px 5px, 5px 5px;
+  border: 1px solid #0000;
+  border-radius: 11px;
+  cursor: pointer;
+  height: 42px;
+  min-width: 0;
+  padding: 0 30px 0 12px;
+  text-overflow: ellipsis;
+  transition: background-color 0.14s, border-color 0.14s;
+  width: 100%;
+}
+
+.event-controls select:hover { background-color: #ebebf0; }
+.event-controls select:focus { background-color: var(--surface-solid); border-color: #1111116b; outline: none; }
+.event-controls select:disabled { background-color: #ecece8; color: var(--tertiary); cursor: not-allowed; }
+
+.event-facts {
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  grid-column: 1 / -1;
+  margin: 0;
+  padding-top: 14px;
+}
+
+.event-facts div { border-left: 1px solid var(--line); min-width: 105px; padding: 0 18px; }
+.event-facts div:first-child { border-left: 0; padding-left: 0; }
+.event-facts div:last-child { flex: 1; }
+
+.event-facts dt {
+  color: var(--tertiary);
+  font-size: 10.5px;
+  font-weight: 620;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.event-facts dd { font-size: 11px; font-weight: 590; margin: 4px 0 0; }
+
+/* ---------- page ---------- */
+
+.page { margin: 0 auto; max-width: 1540px; padding: 28px var(--gutter) 36px; }
+
+.page-heading {
+  align-items: flex-end;
+  display: flex;
+  gap: 18px;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.page-heading h2 {
+  color: var(--tertiary);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.055em;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.page-heading p { color: var(--ink); font-size: 13px; font-weight: 590; margin: 6px 0 0; }
+
+.eyebrow {
+  color: var(--secondary);
+  font-size: 10.5px;
+  font-weight: 720;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+/* ---------- panels ---------- */
+
+.panel {
+  background: var(--surface-solid);
+  border: 1px solid #3c3c431a;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.panel + .panel { margin-top: 20px; }
+
+.panel-heading {
+  align-items: center;
+  display: flex;
+  gap: 18px;
+  justify-content: space-between;
+  padding: 18px 20px 16px;
+}
+
+.panel-heading h3 { font-size: 15px; font-weight: 670; letter-spacing: -0.015em; margin: 0; }
+.panel-heading p { color: var(--secondary); font-size: 11px; margin: 4px 0 0; }
+
+.panel-body { border-top: 1px solid var(--line); padding: 20px; }
+
+.metric-grid {
+  background: var(--surface-solid);
+  border: 1px solid #3c3c431a;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+  margin-bottom: 20px;
+}
+
+.mini-metric { border-left: 1px solid var(--line); display: grid; gap: 4px; min-height: 90px; padding: 18px 20px; }
+.mini-metric:first-child { border-left: 0; }
+.mini-metric > span { color: var(--secondary); font-size: 11px; font-weight: 570; }
+.mini-metric > strong { font-size: 25px; font-weight: 690; letter-spacing: -0.04em; }
+.mini-metric > small { color: var(--tertiary); font-size: 10.5px; }
+
+/* ---------- "content coming soon" ---------- */
+
+/* The soft-amber chip is the same device Event Ops uses for its "Later" nav
+   pill: state is carried by the background, the text stays #111. */
+.soon-chip {
+  align-items: center;
+  background: var(--amber-soft);
+  border-radius: 999px;
+  color: var(--ink);
+  display: inline-flex;
+  font-size: 10.5px;
+  font-weight: 700;
+  gap: 6px;
+  letter-spacing: 0.04em;
+  padding: 5px 10px;
+  text-transform: uppercase;
+}
+
+.soon-chip i { background: var(--accent); border-radius: 50%; height: 6px; width: 6px; }
+
+.placeholder-body {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 300px;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.empty-mark {
+  align-items: center;
+  background: var(--surface-muted);
+  border-radius: 12px;
+  color: var(--secondary);
+  display: flex;
+  font-size: 24px;
+  height: 60px;
+  justify-content: center;
+  margin-bottom: 18px;
+  width: 60px;
+}
+
+.placeholder-body h3 { font-size: 25px; letter-spacing: -0.035em; margin: 8px 0; }
+.placeholder-body p { color: var(--secondary); font-size: 13px; margin: 0 0 18px; max-width: 460px; }
+
+.empty-state {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 58vh;
+  text-align: center;
+}
+
+.empty-state h3 { font-size: 25px; letter-spacing: -0.035em; margin: 8px 0; }
+.empty-state p { color: var(--secondary); font-size: 13px; margin: 0 0 20px; }
+
+/* ---------- responsive ---------- */
+
+@media (max-width: 1100px) {
+  .event-hero { grid-template-columns: 1fr; }
+  .event-controls { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+}
+
+@media (max-width: 860px) {
+  .sidebar { position: static; height: auto; width: 100%; }
+  .workspace { margin-left: 0; }
+}
+
+/* ---------- subtabs ----------
+   Carried over from Event Ops: 3px accent underline on the active tab, the same
+   device the module tab bar used before navigation moved entirely to the rail. */
+
+.subtabs {
+  background: 0 0;
+  border-bottom: 1px solid var(--line-strong);
+  display: inline-flex;
+  gap: 24px;
+  margin-bottom: 20px;
+  padding: 0;
+}
+
+.subtabs button {
+  background: 0 0;
+  border: 0;
+  border-bottom: 3px solid #0000;
+  border-radius: 0;
+  color: var(--secondary);
+  cursor: pointer;
+  font-family: var(--head);
+  font-size: 14px;
+  font-stretch: 75%;
+  font-weight: 800;
+  min-height: 38px;
+  padding: 8px 0 9px;
+  text-transform: uppercase;
+  transition: color 0.14s, border-color 0.14s;
+}
+
+.subtabs button span { color: inherit; font-size: 10.5px; font-weight: 560; margin-left: 5px; }
+.subtabs button.active { border-bottom-color: var(--accent); color: #111; }
+
+/* ---------- account popover ---------- */
+
+.account-wrap { position: relative; }
+
+.avatar {
+  align-items: center;
+  background: var(--accent);
+  border: 0;
+  border-radius: 50%;
+  color: #111;
+  cursor: pointer;
+  display: flex;
+  font-family: var(--head);
+  font-size: 12px;
+  font-stretch: 75%;
+  font-weight: 800;
+  height: 28px;
+  justify-content: center;
+  padding: 0;
+  width: 28px;
+}
+
+.avatar.lg { font-size: 16px; height: 42px; width: 42px; cursor: default; }
+
+.account-popover {
+  background: var(--surface-solid);
+  border: 1px solid #3c3c431a;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-popover, 0 10px 20px #37373714, 0 4px 10px #0000001f);
+  display: grid;
+  gap: 14px;
+  padding: 16px;
+  position: absolute;
+  right: 0;
+  top: calc(100% + 10px);
+  width: 320px;
+  z-index: 40;
+}
+
+.account-head { align-items: center; display: flex; gap: 12px; }
+.account-id { display: grid; gap: 1px; min-width: 0; }
+.account-id strong { font-size: 14px; font-weight: 680; letter-spacing: -0.01em; }
+.account-id small { color: var(--secondary); font-size: 11px; }
+.account-id small.muted { color: var(--tertiary); overflow: hidden; text-overflow: ellipsis; }
+
+.account-facts {
+  border-top: 1px solid var(--line);
+  display: grid;
+  gap: 10px 14px;
+  grid-template-columns: 1fr 1fr;
+  margin: 0;
+  padding-top: 12px;
+}
+
+.account-facts dt {
+  color: var(--tertiary);
+  font-size: 10px;
+  font-weight: 620;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.account-facts dd { font-size: 11.5px; font-weight: 590; margin: 3px 0 0; }
+
+.account-roles { border-top: 1px solid var(--line); display: grid; gap: 8px; padding-top: 12px; }
+
+.role-chips { display: flex; flex-wrap: wrap; gap: 5px; }
+
+.role-chip {
+  align-items: center;
+  background: var(--surface-muted);
+  border-radius: 999px;
+  color: var(--ink);
+  display: inline-flex;
+  font-size: 10.5px;
+  font-weight: 640;
+  gap: 5px;
+  padding: 3px 8px;
+  white-space: nowrap;
+}
+
+.role-chip.muted { color: var(--tertiary); }
+.role-chip em { color: var(--tertiary); font-size: 9.5px; font-style: normal; font-weight: 600; }
+
+/* Access level, carried by background only — never by coloured text. */
+.role-chip.access-admin { background: var(--amber-soft); }
+.role-chip.access-edit { background: var(--accent-soft); }
+
+.account-actions { border-top: 1px solid var(--line); display: flex; gap: 8px; padding-top: 12px; }
+
+.ghost-btn {
+  background: 0 0;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  cursor: pointer;
+  flex: 1;
+  font-size: 11.5px;
+  font-weight: 620;
+  min-height: 30px;
+  transition: background 0.14s, border-color 0.14s;
+}
+
+.ghost-btn:hover:not(:disabled) { background: var(--surface-muted); }
+.ghost-btn:disabled { color: var(--tertiary); cursor: not-allowed; }
+
+/* ---------- tables ---------- */
+
+.table-scroll { overflow-x: auto; }
+
+.hq-table { border-collapse: collapse; font-size: 12px; min-width: 760px; width: 100%; }
+
+.hq-table thead th {
+  background: #f7f7f9;
+  border-bottom: 1px solid var(--line);
+  border-top: 1px solid var(--line);
+  color: var(--secondary);
+  font-size: 10.5px;
+  font-weight: 640;
+  letter-spacing: 0.04em;
+  padding: 10px 14px;
+  text-align: left;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.hq-table tbody td { border-bottom: 1px solid var(--line); padding: 11px 14px; vertical-align: top; }
+.hq-table tbody tr:last-child td { border-bottom: 0; }
+.hq-table tbody tr:hover { background: #fafaf8; }
+
+.hq-table .num { text-align: right; font-variant-numeric: tabular-nums; }
+.hq-table .mono { font-family: var(--font-mono, 'JetBrains Mono', monospace); font-size: 11px; }
+.hq-table .strong { font-weight: 650; }
+.subtle { color: var(--tertiary); font-size: 10.5px; }
+
+.scope-pill {
+  background: var(--surface-muted);
+  border-radius: 999px;
+  font-size: 10.5px;
+  font-weight: 620;
+  padding: 3px 8px;
+  text-transform: capitalize;
+}
+
+/* ---------- commission sheet ----------
+   A mock of the paper form FCP uses today: period header, the line-item grid,
+   and the totals ladder ending in Amount Payable. Ruled borders on purpose —
+   this should read as the form, not as a dashboard table. */
+
+.comm-sheet { padding: 22px 20px 24px; }
+
+.comm-title {
+  font-family: var(--head);
+  font-size: 19px;
+  font-stretch: 75%;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  margin: 0 0 18px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.comm-head { border-collapse: collapse; font-size: 12px; margin-bottom: 18px; width: 100%; }
+
+.comm-head th {
+  background: var(--surface-muted);
+  border: 1px solid var(--line-strong);
+  font-weight: 640;
+  padding: 7px 10px;
+  text-align: left;
+  white-space: nowrap;
+  width: 190px;
+}
+
+.comm-head td { border: 1px solid var(--line-strong); height: 30px; padding: 7px 10px; }
+
+.comm-grid { border-collapse: collapse; font-size: 12px; min-width: 820px; width: 100%; }
+
+.comm-grid thead th {
+  background: var(--surface-muted);
+  border: 1px solid var(--line-strong);
+  font-size: 10.5px;
+  font-weight: 640;
+  letter-spacing: 0.03em;
+  padding: 9px 10px;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.comm-grid tbody td { border: 1px solid var(--line-strong); height: 30px; padding: 6px 10px; }
+.comm-grid tbody tr.blank td { color: #0000; }
+.comm-grid .num { text-align: right; font-variant-numeric: tabular-nums; }
+.comm-grid .mono { font-family: var(--font-mono, 'JetBrains Mono', monospace); font-size: 11px; }
+
+.comm-grid tfoot th {
+  background: var(--surface-muted);
+  border: 1px solid var(--line-strong);
+  font-size: 11px;
+  font-weight: 640;
+  padding: 7px 10px;
+  text-align: right;
+}
+
+.comm-grid tfoot td { border: 1px solid var(--line-strong); padding: 7px 10px; }
+.comm-grid tfoot td.spacer { border: 0; }
+.comm-grid tfoot tr.payable th, .comm-grid tfoot tr.payable td { background: var(--amber-soft); font-weight: 700; }
+
+/* ---------- commission sheet: form controls ----------
+   Inputs sit flush inside the ruled cells so the grid still reads as the paper
+   form rather than as a stack of web widgets. Borders come from the cell; the
+   input contributes only a focus tint. */
+
+.comm-head td input,
+.comm-grid td input {
+  background: 0 0;
+  border: 0;
+  border-radius: 0;
+  height: 26px;
+  min-height: 0;
+  padding: 0 2px;
+  width: 100%;
+}
+
+.comm-head td input:hover,
+.comm-grid td input:hover { background: #f7f7f9; }
+
+.comm-head td input:focus,
+.comm-grid td input:focus {
+  background: var(--accent-soft);
+  border: 0;
+  outline: 2px solid #ffd200cc;
+  outline-offset: -2px;
+}
+
+.comm-grid td input.num,
+.comm-grid td input[type='number'] { text-align: right; font-variant-numeric: tabular-nums; }
+
+/* Hide the spinners — they crowd a money column. */
+.comm-grid input[type='number']::-webkit-outer-spin-button,
+.comm-grid input[type='number']::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.comm-grid input[type='number'] { -moz-appearance: textfield; }
+
+.comm-grid td.computed { background: #fafaf8; font-variant-numeric: tabular-nums; }
+
+.comm-grid th.rowtools, .comm-grid td.rowtools { border: 0; padding: 0 0 0 6px; width: 30px; }
+
+.row-remove {
+  background: 0 0;
+  border: 0;
+  border-radius: 4px;
+  color: var(--tertiary);
+  cursor: pointer;
+  font-size: 15px;
+  height: 24px;
+  line-height: 1;
+  opacity: 0;
+  transition: opacity 0.12s, background 0.12s, color 0.12s;
+  width: 24px;
+}
+
+.comm-grid tbody tr:hover .row-remove { opacity: 1; }
+.row-remove:hover { background: var(--surface-muted); color: var(--ink); }
+.row-remove:focus-visible { opacity: 1; }
+
+.ghost-btn.add-row { flex: none; padding: 0 12px; }
+
+.comm-notes { margin-top: 18px; }
+.comm-notes label { display: grid; gap: 6px; }
+.comm-notes label > span {
+  color: #4d4d52;
+  font-size: 11px;
+  font-weight: 620;
+}
+.comm-notes textarea {
+  background: #f4f4f7;
+  border: 1px solid #0000;
+  border-radius: 9px;
+  line-height: 1.45;
+  padding: 10px;
+  resize: vertical;
+  width: 100%;
+}
+.comm-notes textarea:focus { background: #fff; border-color: #11111157; outline: none; }
+
+.comm-actions {
+  align-items: center;
+  border-top: 1px solid var(--line);
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  margin-top: 18px;
+  padding-top: 16px;
+}
+
+.comm-status { font-size: 11.5px; font-weight: 590; min-height: 16px; }
+.comm-status .ok { color: var(--secondary); }
+.comm-status .err { color: var(--destructive, #b3401f); }
+.comm-buttons { display: flex; gap: 8px; }
+
+/* The one filled accent in the app, and only because submitting is the point of
+   the screen. Everything else uses the accent as a rule or a tint. */
+.primary-btn {
+  background: var(--accent);
+  border: 1px solid #0000;
+  border-radius: 999px;
+  color: #111;
+  cursor: pointer;
+  font-size: 11.5px;
+  font-weight: 700;
+  min-height: 30px;
+  padding: 0 16px;
+  transition: background 0.14s;
+}
+
+.primary-btn:hover:not(:disabled) { background: var(--accent-hover); }
+.primary-btn:disabled { background: var(--surface-muted); color: var(--tertiary); cursor: not-allowed; }
+
+.soon-chip.submitted { background: var(--green-soft); }
+
+/* ---------- landing ----------
+   The shell opens here with no app selected. Two numbered steps rather than a
+   paragraph, because the point is that the shell expects two choices. */
+
+.landing {
+  margin: 0 auto;
+  max-width: 620px;
+  padding: 56px 0 40px;
+  text-align: center;
+}
+
+.landing-mark {
+  background: var(--accent);
+  border-radius: 3px;
+  display: inline-block;
+  height: 34px;
+  margin-bottom: 20px;
+  width: 8px;
+}
+
+.landing h2 {
+  font-family: var(--head);
+  font-size: clamp(28px, 3vw, 40px);
+  font-stretch: 75%;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1;
+  margin: 0;
+}
+
+.landing-lede {
+  color: var(--secondary);
+  font-size: 13.5px;
+  line-height: 1.5;
+  margin: 12px auto 28px;
+  max-width: 460px;
+}
+
+.landing-steps {
+  counter-reset: step;
+  display: grid;
+  gap: 10px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+}
+
+.landing-steps li {
+  background: var(--surface-solid);
+  border: 1px solid #3c3c431a;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  counter-increment: step;
+  display: grid;
+  gap: 3px;
+  padding: 16px 18px 16px 52px;
+  position: relative;
+}
+
+.landing-steps li::before {
+  align-items: center;
+  background: var(--surface-muted);
+  border-radius: 50%;
+  content: counter(step);
+  display: flex;
+  font-family: var(--head);
+  font-size: 13px;
+  font-stretch: 75%;
+  font-weight: 800;
+  height: 24px;
+  justify-content: center;
+  left: 18px;
+  position: absolute;
+  top: 16px;
+  width: 24px;
+}
+
+/* A step the user has already satisfied gets the accent, so the landing doubles
+   as a progress read rather than static copy. */
+.landing-steps li.done::before { background: var(--accent); content: '✓'; }
+
+.landing-steps strong { font-size: 13.5px; font-weight: 670; }
+.landing-steps span { color: var(--secondary); font-size: 12px; line-height: 1.45; }
+
+/* ---------- coming soon ---------- */
+
+.coming-soon {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  justify-content: center;
+  min-height: 46vh;
+  text-align: center;
+}
+
+.coming-soon h2 {
+  font-family: var(--head);
+  font-size: clamp(26px, 2.6vw, 38px);
+  font-stretch: 75%;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1;
+  margin: 0;
+}
