@@ -1,0 +1,168 @@
+{
+  "private": true,
+  "retool": {
+    "app": {
+      "uuid": "57715ebe-b69d-11f1-8ab5-3b843d8e9745",
+      "name": "Feld HQ",
+      "resourceReferencesByFile": {
+        "/backend/functions/getCommissionSheet.ts": [
+          {
+            "name": "937881d6-6298-49ba-b304-2023410fb5e3",
+            "displayName": "Domo DB (read-only)",
+            "type": "snowflake"
+          },
+          {
+            "name": "4a131fd9-0c80-4023-8f9c-d20abdbac9a8",
+            "displayName": "retool_db",
+            "type": "retoolDb"
+          }
+        ],
+        "/backend/functions/getCurrentUser.ts": [
+          {
+            "name": "937881d6-6298-49ba-b304-2023410fb5e3",
+            "displayName": "Domo DB (read-only)",
+            "type": "snowflake"
+          },
+          {
+            "name": "4a131fd9-0c80-4023-8f9c-d20abdbac9a8",
+            "displayName": "retool_db",
+            "type": "retoolDb"
+          }
+        ],
+        "/backend/functions/getEngagement.ts": [
+          {
+            "name": "937881d6-6298-49ba-b304-2023410fb5e3",
+            "displayName": "Domo DB (read-only)",
+            "type": "snowflake"
+          },
+          {
+            "name": "4a131fd9-0c80-4023-8f9c-d20abdbac9a8",
+            "displayName": "retool_db",
+            "type": "retoolDb"
+          }
+        ],
+        "/backend/functions/getUserContext.ts": [
+          {
+            "name": "937881d6-6298-49ba-b304-2023410fb5e3",
+            "displayName": "Domo DB (read-only)",
+            "type": "snowflake"
+          },
+          {
+            "name": "4a131fd9-0c80-4023-8f9c-d20abdbac9a8",
+            "displayName": "retool_db",
+            "type": "retoolDb"
+          }
+        ],
+        "/backend/functions/hq.ts": [
+          {
+            "name": "937881d6-6298-49ba-b304-2023410fb5e3",
+            "displayName": "Domo DB (read-only)",
+            "type": "snowflake"
+          },
+          {
+            "name": "4a131fd9-0c80-4023-8f9c-d20abdbac9a8",
+            "displayName": "retool_db",
+            "type": "retoolDb"
+          }
+        ],
+        "/backend/functions/listAppGroups.ts": [
+          {
+            "name": "937881d6-6298-49ba-b304-2023410fb5e3",
+            "displayName": "Domo DB (read-only)",
+            "type": "snowflake"
+          },
+          {
+            "name": "4a131fd9-0c80-4023-8f9c-d20abdbac9a8",
+            "displayName": "retool_db",
+            "type": "retoolDb"
+          }
+        ],
+        "/backend/functions/listEngagements.ts": [
+          {
+            "name": "937881d6-6298-49ba-b304-2023410fb5e3",
+            "displayName": "Domo DB (read-only)",
+            "type": "snowflake"
+          },
+          {
+            "name": "4a131fd9-0c80-4023-8f9c-d20abdbac9a8",
+            "displayName": "retool_db",
+            "type": "retoolDb"
+          }
+        ],
+        "/backend/functions/listModules.ts": [
+          {
+            "name": "937881d6-6298-49ba-b304-2023410fb5e3",
+            "displayName": "Domo DB (read-only)",
+            "type": "snowflake"
+          },
+          {
+            "name": "4a131fd9-0c80-4023-8f9c-d20abdbac9a8",
+            "displayName": "retool_db",
+            "type": "retoolDb"
+          }
+        ],
+        "/backend/functions/listRbac.ts": [
+          {
+            "name": "937881d6-6298-49ba-b304-2023410fb5e3",
+            "displayName": "Domo DB (read-only)",
+            "type": "snowflake"
+          },
+          {
+            "name": "4a131fd9-0c80-4023-8f9c-d20abdbac9a8",
+            "displayName": "retool_db",
+            "type": "retoolDb"
+          }
+        ],
+        "/backend/functions/listShowYears.ts": [
+          {
+            "name": "937881d6-6298-49ba-b304-2023410fb5e3",
+            "displayName": "Domo DB (read-only)",
+            "type": "snowflake"
+          },
+          {
+            "name": "4a131fd9-0c80-4023-8f9c-d20abdbac9a8",
+            "displayName": "retool_db",
+            "type": "retoolDb"
+          }
+        ],
+        "/backend/functions/listShows.ts": [
+          {
+            "name": "937881d6-6298-49ba-b304-2023410fb5e3",
+            "displayName": "Domo DB (read-only)",
+            "type": "snowflake"
+          },
+          {
+            "name": "4a131fd9-0c80-4023-8f9c-d20abdbac9a8",
+            "displayName": "retool_db",
+            "type": "retoolDb"
+          }
+        ],
+        "/backend/functions/saveCommissionSheet.ts": [
+          {
+            "name": "937881d6-6298-49ba-b304-2023410fb5e3",
+            "displayName": "Domo DB (read-only)",
+            "type": "snowflake"
+          },
+          {
+            "name": "4a131fd9-0c80-4023-8f9c-d20abdbac9a8",
+            "displayName": "retool_db",
+            "type": "retoolDb"
+          }
+        ],
+        "/backend/functions/saveUserContext.ts": [
+          {
+            "name": "937881d6-6298-49ba-b304-2023410fb5e3",
+            "displayName": "Domo DB (read-only)",
+            "type": "snowflake"
+          },
+          {
+            "name": "4a131fd9-0c80-4023-8f9c-d20abdbac9a8",
+            "displayName": "retool_db",
+            "type": "retoolDb"
+          }
+        ]
+      },
+      "appIdentifier": "feld-hq"
+    }
+  }
+}
