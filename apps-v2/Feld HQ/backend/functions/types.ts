@@ -106,6 +106,19 @@ export type CurrentUser = {
   department_name: string | null
   division_name: string | null
   roles: string[]
+  /** The EIS selection this person left off on; null on first visit. */
+  context?: UserContext | null
+}
+
+/** A row of hq_user_context. */
+export type UserContext = {
+  module_id: number | null
+  show_status: 'active' | 'inactive'
+  show_year: string | null
+  show_group: 'fms' | 'legacy' | null
+  show_code: string | null
+  tour_id: number | null
+  engagement_id: number | null
 }
 
 /** The EIS cascade, in the order Event Ops specifies: broadest scope first.

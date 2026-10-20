@@ -19,6 +19,11 @@ export function EisContextBar({ eis }: { eis: EisState }) {
             ? `${engagement.show_name} · ${engagement.tour_name} · ${engagement.venue_name ?? 'Venue TBD'}`
             : 'Pick a status, year, show group and show to load the engagements routed for that season.'}
         </p>
+        {eis.error ? (
+          <p className="eis-error" role="alert">
+            {eis.error}
+          </p>
+        ) : null}
       </div>
 
       <div className="event-controls">

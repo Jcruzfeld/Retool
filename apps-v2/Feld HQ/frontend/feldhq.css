@@ -307,6 +307,15 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
    deliberate and carried over from Event Ops — broadest scope first, then year,
    then progressively narrower. Do not reorder. Engagement labels are the longest
    ("Salt Lake City, UT · Jan 2, 2026"), so it gets the extra room. */
+.eis-error {
+  background: #fff3cd;
+  border-radius: 4px;
+  color: #111;
+  font-size: 12px;
+  margin-top: 8px;
+  padding: 6px 10px;
+}
+
 .event-controls {
   align-items: end;
   display: grid;

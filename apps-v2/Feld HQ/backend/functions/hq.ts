@@ -217,6 +217,8 @@ export async function getEngagement(engagementId: number): Promise<Engagement | 
 
 /* ============================ identity + RBAC (Postgres) ============================ */
 
+/** The saved EIS selection rides along with the user, so the shell boots on a
+ *  single round trip instead of waiting on a second getUserContext call. */
 export async function getCurrentUser(upn: string): Promise<CurrentUser | null> {
   const { data } = await retoolDb.query<any>(
     `SELECT p.person_id, p.upn, p.display_name, p.job_title,
@@ -227,10 +229,20 @@ export async function getCurrentUser(upn: string): Promise<CurrentUser | null> {
                  JOIN org_role r ON r.role_id = pr.role_id
                 WHERE pr.person_id = p.person_id),
               ARRAY[]::text[]
-            ) AS roles
+            ) AS roles,
+            CASE WHEN uc.person_id IS NULL THEN NULL ELSE json_build_object(
+              'module_id', uc.module_id,
+              'show_status', uc.show_status,
+              'show_year', uc.show_year,
+              'show_group', uc.show_group,
+              'show_code', uc.show_code,
+              'tour_id', uc.tour_id,
+              'engagement_id', uc.engagement_id
+            ) END AS context
        FROM org_person p
        LEFT JOIN org_department d ON d.department_id = p.department_id
        LEFT JOIN org_division dv ON dv.division_id = d.division_id
+       LEFT JOIN hq_user_context uc ON uc.person_id = p.person_id
       WHERE lower(p.upn) = lower($1)
         AND p.is_active`,
     [upn],

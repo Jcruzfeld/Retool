@@ -3,6 +3,7 @@ import type { AppEntry, AppGroup, Engagement } from '../lib/types'
 
 type Props = {
   groups: AppGroup[]
+  loading?: boolean
   activeAppCode: string | null
   engagement: Engagement | null
   onSelectApp: (app: AppEntry) => void
@@ -94,7 +95,7 @@ function Group({
   )
 }
 
-export function Sidebar({ groups, activeAppCode, engagement, onSelectApp }: Props) {
+export function Sidebar({ groups, loading, activeAppCode, engagement, onSelectApp }: Props) {
   return (
     <aside className="sidebar">
       <div className="brand">
@@ -106,7 +107,8 @@ export function Sidebar({ groups, activeAppCode, engagement, onSelectApp }: Prop
       </div>
 
       <p className="apps-menu-label">Apps menu</p>
-      <nav className="apps-menu" aria-label="Feld HQ applications">
+      <nav className="apps-menu" aria-label="Feld HQ applications" aria-busy={loading || undefined}>
+        {loading && !groups.length ? <p className="apps-menu-label">Loading apps…</p> : null}
         {groups.map((group, i) => (
           <Group
             key={group.app_group_id}

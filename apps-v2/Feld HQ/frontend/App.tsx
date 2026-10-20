@@ -11,7 +11,7 @@ import { ModulePlaceholder } from './pages/ModulePlaceholder'
 import { PosCommission } from './pages/PosCommission'
 import { DEMO_UPN, useApi } from './lib/api'
 import type { ApiClient } from './lib/api'
-import type { AppEntry, AppGroup, CurrentUser, Module } from './lib/types'
+import type { AppEntry, AppGroup, CurrentUser, Module, UserContext } from './lib/types'
 import { useEis } from './lib/useEis'
 
 export default function App() {
@@ -22,38 +22,45 @@ export default function App() {
   const [activeAppCode, setActiveAppCode] = useState<string | null>(null)
   const [search, setSearch] = useState('')
   const [booting, setBooting] = useState(true)
-  const [savedContext, setSavedContext] = useState<any>(null)
-  const [contextLoaded, setContextLoaded] = useState(false)
+  const [navLoading, setNavLoading] = useState(true)
 
-  // Boot: nav + identity + the EIS selection this person left off on.
+  // Boot blocks only on identity (which carries the saved EIS selection), so
+  // the shell paints after one Postgres round trip. Nav fills in when it lands.
+  // Every call is caught: a failed query must never strand the boot screen.
   useEffect(() => {
     let cancelled = false
-    ;(async () => {
-      const [mods, grps, me] = await Promise.all([
-        api.listModules(),
-        api.listAppGroups(),
-        api.getCurrentUser(DEMO_UPN),
-      ])
+    api
+      .getCurrentUser(DEMO_UPN)
+      .catch((err) => {
+        console.error('getCurrentUser failed', err)
+        return null
+      })
+      .then((me) => {
+        if (cancelled) return
+        setUser(me)
+        setBooting(false)
+      })
+    Promise.all([
+      api.listModules().catch((err) => {
+        console.error('listModules failed', err)
+        return [] as Module[]
+      }),
+      api.listAppGroups().catch((err) => {
+        console.error('listAppGroups failed', err)
+        return [] as AppGroup[]
+      }),
+    ]).then(([mods, grps]) => {
       if (cancelled) return
       setModules(mods)
       setGroups(grps)
-      setUser(me)
-
-      if (me) {
-        const ctx = await api.getUserContext(me.person_id)
-        if (!cancelled) setSavedContext(ctx)
-      }
-      if (!cancelled) {
-        setContextLoaded(true)
-        setBooting(false)
-      }
-    })()
+      setNavLoading(false)
+    })
     return () => {
       cancelled = true
     }
   }, [api])
 
-  if (booting || !contextLoaded) {
+  if (booting) {
     return <BootScreen />
   }
   return (
@@ -61,7 +68,8 @@ export default function App() {
       modules={modules}
       groups={groups}
       user={user}
-      savedContext={savedContext}
+      savedContext={user?.context ?? null}
+      navLoading={navLoading}
       api={api}
       activeAppCode={activeAppCode}
       setActiveAppCode={setActiveAppCode}
@@ -89,7 +97,7 @@ function BootScreen() {
       >
         Feld HQ
       </strong>
-      <span style={{ color: '#5d5d59', fontSize: 12 }}>Loading apps and EIS context…</span>
+      <span style={{ color: '#5d5d59', fontSize: 12 }}>Signing you in…</span>
     </div>
   )
 }
@@ -112,6 +120,7 @@ function Shell({
   groups,
   user,
   savedContext,
+  navLoading,
   api,
   activeAppCode,
   setActiveAppCode,
@@ -121,7 +130,8 @@ function Shell({
   modules: Module[]
   groups: AppGroup[]
   user: CurrentUser | null
-  savedContext: any
+  savedContext: UserContext | null
+  navLoading: boolean
   api: ApiClient
   activeAppCode: string | null
   setActiveAppCode: (code: string | null) => void
@@ -199,6 +209,7 @@ function Shell({
     <div className="app-shell">
       <Sidebar
         groups={filteredGroups}
+        loading={navLoading}
         activeAppCode={active?.app.code ?? null}
         engagement={eis.engagement}
         onSelectApp={(app) => setActiveAppCode(app.code)}

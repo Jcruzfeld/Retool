@@ -29,20 +29,32 @@ export function useEis(api: ApiClient, initial?: {
   const [shows, setShows] = useState<Show[]>([])
   const [engagements, setEngagements] = useState<Engagement[]>([])
   const [loading, setLoading] = useState(true)
+  // The last EIS query failure, surfaced in the bar instead of leaving the
+  // selectors silently empty. Cleared by the next successful read.
+  const [error, setError] = useState<string | null>(null)
+  const fail = useCallback((what: string, err: unknown) => {
+    console.error(`EIS ${what} failed`, err)
+    setError(`Could not load ${what} from EIS: ${err instanceof Error ? err.message : String(err)}`)
+  }, [])
 
   // status -> years
   useEffect(() => {
     let cancelled = false
     api.listShowYears(showStatus).then((next) => {
       if (cancelled) return
+      setError(null)
       setYears(next)
       // Keep the current year if it survives the status change, else fall back.
       setYearRaw((prev) => (prev && next.includes(prev) ? prev : (next[0] ?? null)))
+    }, (err) => {
+      if (cancelled) return
+      setYears([])
+      fail('years', err)
     })
     return () => {
       cancelled = true
     }
-  }, [api, showStatus])
+  }, [api, showStatus, fail])
 
   // year + group -> shows
   useEffect(() => {
@@ -53,13 +65,18 @@ export function useEis(api: ApiClient, initial?: {
     }
     api.listShows(showStatus, year, showGroup).then((next) => {
       if (cancelled) return
+      setError(null)
       setShows(next)
       setShowCodeRaw((prev) => (prev && next.some((s) => s.show_code === prev) ? prev : null))
+    }, (err) => {
+      if (cancelled) return
+      setShows([])
+      fail('shows', err)
     })
     return () => {
       cancelled = true
     }
-  }, [api, showStatus, year, showGroup])
+  }, [api, showStatus, year, showGroup, fail])
 
   // show + year -> engagements
   useEffect(() => {
@@ -72,16 +89,22 @@ export function useEis(api: ApiClient, initial?: {
     setLoading(true)
     api.listEngagements(showCode, year).then((next) => {
       if (cancelled) return
+      setError(null)
       setEngagements(next)
       setEngagementId((prev) =>
         prev && next.some((e) => e.engagement_id === prev) ? prev : (next[0]?.engagement_id ?? null),
       )
       setLoading(false)
+    }, (err) => {
+      if (cancelled) return
+      setEngagements([])
+      setLoading(false)
+      fail('engagements', err)
     })
     return () => {
       cancelled = true
     }
-  }, [api, showCode, year])
+  }, [api, showCode, year, fail])
 
   // Each setter clears what sits below it in the cascade.
   const setShowStatus = useCallback((next: 'active' | 'inactive') => {
@@ -127,6 +150,7 @@ export function useEis(api: ApiClient, initial?: {
     engagement,
     show,
     loading,
+    error,
     setShowStatus,
     setYear,
     setShowGroup,
